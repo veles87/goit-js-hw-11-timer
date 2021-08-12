@@ -1,10 +1,13 @@
 .timer {
-  width: 30%;
+  width: 50%;
   display: flex;
-  font-size: 24px;
+  font-size: 36px;
   justify-content: space-between;
+  color: rgb(63, 63, 62);
+  margin-top: 350px;
+  margin-left: 280px;
 }
 .value {
-  color: rgb(195, 0, 255);
-  font-size: 36px;
+  color: rgb(76, 0, 255);
+  font-size: 45px;
 }
