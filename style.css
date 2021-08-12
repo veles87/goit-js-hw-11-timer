@@ -1,13 +1,22 @@
+body{
+  font-family: 'Pirata One',
+  cursive;
+  background-color: rgba(6, 207, 243, 0.589);
+}
+
 .timer {
-  width: 50%;
+  width: 45%;
   display: flex;
   font-size: 36px;
   justify-content: space-between;
   color: rgb(63, 63, 62);
   margin-top: 350px;
-  margin-left: 280px;
+  margin-left: 450px;
+  margin-right: 450px;
 }
 .value {
-  color: rgb(76, 0, 255);
+  color: rgb(255, 0, 0);
   font-size: 45px;
+
+  
 }
