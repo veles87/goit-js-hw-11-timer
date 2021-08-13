@@ -1,72 +1,53 @@
-//Timer
-
-
 class CountdownTimer {
-    constructor({ selector, targetDate }) {
-        this.selector = selector;
-        this.targerDate = targetDate;
-        const targetDateForTimer = new Date(targetDate);
-        let unixTargetTime = targetDateForTimer.getTime();
-        this.template = `<div class="field">
-            <span class="value" data-value="days">11</span>
-            <span class="label">Days</span>
-        </div>
-    
-        <div class="field">
-            <span class="value" data-value="hours">11</span>
-            <span class="label">Hours</span>
-        </div>
-    
-        <div class="field">
-            <span class="value" data-value="mins">11</span>
-            <span class="label">Minutes</span>
-        </div>
-    
-        <div class="field">
-            <span class="value" data-value="secs">11</span>
-            <span class="label">Seconds</span>
-        </div>`;
-        
-        this.root = document.querySelector(this.selector);
-        this.root.insertAdjacentHTML('beforeend', this.template);
-        this.refs = {
-            days: this.root.querySelector("span[data-value='days']"),
-            hours: this.root.querySelector("span[data-value='hours']"),
-            minutes: this.root.querySelector("span[data-value='mins']"),
-            seconds: this.root.querySelector("span[data-value='secs']")
-        };
-        
-        function timeCalc(currentTime, refs) {
-            refs.days.textContent = Math.floor(currentTime / (1000 * 60 * 60 * 24));
-            refs.hours.textContent = Math.floor( currentTime % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
-            refs.minutes.textContent = Math.floor(currentTime % (1000 * 60 * 60) / (1000 * 60));
-            refs.seconds.textContent = Math.floor(currentTime % (1000 * 60) / 1000);
-        };
-        function deltaTime(targetDate, nowTime) { 
-            return targetDate - nowTime;
-        };
+  constructor({ selector, targetDate }) {
+    this.selector = selector;
+    this.targetDate = targetDate;
+    this.refs = {
+      days: document.querySelector('span[data-value="days"]'),
+      hours: document.querySelector('span[data-value="hours"]'),
+      mins: document.querySelector('span[data-value="mins"]'),
+      secs: document.querySelector('span[data-value="secs"]'),
+    };
+    this.intervalId = null;
+  }
 
-        const startTimeRef = new Date();
-        let difStartTime = deltaTime(targetDateForTimer, startTimeRef);
-        timeCalc(difStartTime, this.refs);
+  start() {
+    const startDate = this.targetDate.getTime();
+    this.intervalId = setInterval(() => {
+      const currentDate = Date.now();
+      const deltaDate = startDate - currentDate;
+      if (deltaDate <= 0) {
+        clearInterval(this.intervalId);
+      }
+      this.getTimeComponents(deltaDate);
+    }, 1000);
+  }
 
-        const timerRef = setInterval(() => {
-            if (unixTargetTime > 0) {
-                const date = new Date();
-                let nowTimeRef = date.getTime()
-                let difTimeNow = deltaTime(unixTargetTime, nowTimeRef);
-                timeCalc(difTimeNow, this.refs);
-            } else {
-                console.log('Відлік завершено або дата задана в минулому!!!');
-                clearInterval(timerRef);
-            }
-        }, 1000);
-    }
-};
+  getTimeComponents(time) {
+    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const hours = this.pad(
+      Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    );
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+    this.updateTimer(days, hours, mins, secs);
+  }
 
+  pad(value) {
+    return String(value).padStart(2, '0');
+  }
+
+  updateTimer(days, hours, mins, secs) {
+    this.refs.days.textContent = `${days}`;
+    this.refs.hours.textContent = `${hours}`;
+    this.refs.mins.textContent = `${mins}`;
+    this.refs.secs.textContent = `${secs}`;
+  }
+}
 
 const timer = new CountdownTimer({
   selector: '#timer-1',
-  targetDate: new Date('Octo 25, 2021'),
+  targetDate: new Date('Jun 13, 2022'),
 });
 
+timer.start();
